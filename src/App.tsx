@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.scss';
-import DiceChat from './component/DiceChat';
+import DiceBoard from './component/DiceBoard';
 
 function App() {
   return (
     <div className="App">
-      <DiceChat />
+      <DiceBoard />
     </div>
   );
 }
