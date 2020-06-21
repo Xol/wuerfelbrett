@@ -19,7 +19,7 @@ class DiceBoard extends Component<Props, State> {
         this.state = {
             username: 'HardcodedUsername',
             rollHistory: [{
-                rollResults: Array(), 
+                rollResults: [], 
                 timestamp: 0
             }],
             diceAmount: 1
@@ -32,7 +32,7 @@ class DiceBoard extends Component<Props, State> {
         const currentRoll = this.state.rollHistory[index]
         const username = this.state.username
 
-        if(currentRoll.rollResults.length === 0 || currentRoll.timestamp === 1) {
+        if(currentRoll.rollResults.length === 0 || currentRoll.timestamp === 0) {
             return
         }
 

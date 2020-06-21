@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 import w61 from '../static/w6-1.svg';
 import w62 from '../static/w6-2.svg';
