@@ -3,8 +3,13 @@ import DiceArea from './DiceArea'
 
 interface Props {
     timestamp: number,
-    username: String,
-    rollResults: Array<number>
+    username: string,
+    rollResults: Array<DieResult>
+}
+
+interface DieResult {
+    identifier: string,
+    result: number
 }
 
 function DiceScore(props:Props) {   

@@ -8,13 +8,18 @@ import w65 from '../static/w6-5.svg';
 import w66 from '../static/w6-6.svg';
 
 interface Props {
-    rollResults: Array<number>
+    rollResults: Array<DieResult>
+}
+
+interface DieResult {
+    identifier: string,
+    result:number
 }
 
 function DiceArea(props:Props) {
     const diceW6 = [w61, w62, w63, w64, w65, w66]
     const results = props.rollResults.map((rollResult, index) => {
-        return <img src={ diceW6[rollResult-1] } className="dice" alt="W6" />
+        return <img src={ diceW6[rollResult.result-1] } className="dice" alt={rollResult.identifier.toString() + ": " + rollResult.result.toString()} />
     })
 
     return <span> { results } </span>

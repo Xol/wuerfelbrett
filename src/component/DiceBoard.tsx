@@ -6,10 +6,21 @@ interface Props { }
 interface State {
     username: string,
     rollHistory:Array<{
-        rollResults: Array<number>,
+        rollResults: Array<DieResult>,
         timestamp: number
     }>,
-    diceAmount: number
+    diceSelection: Array<Die>
+}
+
+interface Die {
+    identifier: string,
+    max: number,
+    amount: number
+}
+
+interface DieResult {
+    identifier: string,
+    result: number
 }
 
 class DiceBoard extends Component<Props, State> {
@@ -22,7 +33,7 @@ class DiceBoard extends Component<Props, State> {
                 rollResults: [], 
                 timestamp: 0
             }],
-            diceAmount: 1
+            diceSelection: [{identifier:"D6",max:6,amount:0}, {identifier:"D10",max:10,amount:0}, {identifier:"D20",max:20,amount:0}]
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -48,20 +59,28 @@ class DiceBoard extends Component<Props, State> {
         return randomNumber
     }
 
-    handleChange(event:ChangeEvent<HTMLInputElement>){
+    handleChange(event:ChangeEvent<HTMLInputElement>, index:number){
         const newDiceAmount = Number(event.target.value)
+        const diceSelection = this.state.diceSelection.slice()
+        const currentSelection = diceSelection[index]
+
+        currentSelection.amount = newDiceAmount
+
         this.setState({
-          diceAmount: newDiceAmount
+            diceSelection: diceSelection
         })
     }
 
     handleSubmit(event:FormEvent) {
         const rollResults = this.state.rollHistory.slice()
-        const diceAmount = this.state.diceAmount
-        const newDiceRolls = Array(diceAmount)
+        const diceSelection = this.state.diceSelection.slice()
+        const newDiceRolls = Array<DieResult>()
 
-        for(let i = 0; i < diceAmount; i++){
-            newDiceRolls.push(this.rollDice(1,6))
+        for(let i = 0; i < diceSelection.length; i++){
+            const currentDice = diceSelection[i]
+            for(let j = 0; j < currentDice.amount; j++){
+                newDiceRolls.push({identifier:currentDice.identifier, result:this.rollDice(1,currentDice.max)})
+            }
         }
         
         rollResults.push({
@@ -78,6 +97,7 @@ class DiceBoard extends Component<Props, State> {
 
     render(){       
         const pastRolls = this.state.rollHistory
+        const diceSelection = this.state.diceSelection
 
         if(this.state.username !== null){
 
@@ -86,6 +106,15 @@ class DiceBoard extends Component<Props, State> {
                     this.createDiceScore(index)
                 )
             })
+
+            const diceInputFields = diceSelection.map((die, index) => {
+                return (
+                    <label>
+                        {die.identifier} amount: <input value={die.amount} type="number" min={0} onChange={(event) => this.handleChange(event,index)}></input>
+                        <p />
+                    </label>
+                )
+            }) 
 
             return(
                 <div className="game-board">
@@ -96,9 +125,8 @@ class DiceBoard extends Component<Props, State> {
                     <div className="control"><u>Player control</u>
                         <br />
                         <form onSubmit={this.handleSubmit}>
-                            <label>
-                                D6 amount: <input value={this.state.diceAmount} type="number" onChange={this.handleChange} min="1"/>
-                            </label>
+                            {diceInputFields}
+                            <br />
                             <input type="submit" value="Roll" />
                         </form>
                     </div>
